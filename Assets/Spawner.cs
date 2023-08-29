@@ -122,8 +122,6 @@ public class Spawner : MonoBehaviour
         GameObject ball = SpawnBall();
         balls.Add(ball);
         singleNotes.Add(ball);
-
-
         messageUIScript.TriggerMessageUpdate("Single Note Added");
 
     }

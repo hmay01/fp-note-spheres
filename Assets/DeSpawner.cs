@@ -75,7 +75,7 @@ public class DeSpawner : MonoBehaviour
         }
         
         else if (Input.GetKeyDown(KeyCode.Z) && singleNotes.Count > 0){
-            DeSpawnNote(singleNotes[0]); 
+            DeSpawnNote(singleNotes[0]);
             messageUIScript.TriggerMessageUpdate("First Note Despawned");
 
         }
@@ -135,7 +135,6 @@ public class DeSpawner : MonoBehaviour
             floorBalls.RemoveAt(floorBalls.IndexOf(note));
         }
         Destroy(note);
-        Destroy(note.GetComponent<Spotlight>().spotLight);
 
 
         singleNotes.RemoveAt(singleNotes.IndexOf(note));   
