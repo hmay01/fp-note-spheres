@@ -270,10 +270,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b701057eba0c47d19753e4f1b3bb200, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  squishIncrement: 0.15
-  unSquishIncrement: 0.005
-  maxSquishAmount: 1.2
+  maxSquishAmount: 1.25
   triggerSquishMagnitude: 0.7
-  pitchLow: 0
+  pitchLow: 0.8
   squishTime: 0.1
   unSquishTime: 0.3

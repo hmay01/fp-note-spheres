@@ -10,11 +10,11 @@ public class Squish : MonoBehaviour
     float maxCollisionMagnitude;
     int floorLayer;
 
-    // AudioSource audioSource;
+    AudioSource audioSource;
 
-    // public float pitchLow;
+    public float pitchLow;
 
-    // float pitch;
+    float pitch;
 
     //new
     public float squishTime;
@@ -27,12 +27,14 @@ public class Squish : MonoBehaviour
         initialScale = transform.localScale;
         floorLayer = 6;
         maxCollisionMagnitude = 17;
+        audioSource = GetComponent<AudioSource>();
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        // audioSource.pitch = pitch;
+        audioSource.pitch = pitch;
     }
 
     void OnCollisionEnter(Collision collision)
@@ -69,6 +71,7 @@ public class Squish : MonoBehaviour
             while (elapsedTime < squishTime)
             {
                 transform.localScale = Vector3.Lerp(initialScale, squishScale, (elapsedTime / squishTime));
+                pitch = Mathf.Lerp (pitchLow, 1, Mathf.InverseLerp (squishX, initialScale.x, transform.localScale.x));
                 elapsedTime += Time.deltaTime;
                 yield return new WaitForEndOfFrame();
             }
@@ -92,7 +95,7 @@ public class Squish : MonoBehaviour
 
     }
 
-    //         pitch = Mathf.Lerp (pitchLow, 1, Mathf.InverseLerp (squishX, initialScale, x));
+
 
 
 
