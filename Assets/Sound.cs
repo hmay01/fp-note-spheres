@@ -10,6 +10,9 @@ public class Sound : MonoBehaviour
 
     public float triggerSoundMagnitude;
 
+    int floorLayer;
+
+
     // AudioClip[] audioClips;
 
 
@@ -17,6 +20,8 @@ public class Sound : MonoBehaviour
     {
         audioSource = GetComponent<AudioSource>();
         noteUIScript = GameObject.FindGameObjectWithTag("NoteUI").GetComponent<NoteUI>();
+        floorLayer = 6;
+
 
 
 
@@ -40,7 +45,7 @@ public class Sound : MonoBehaviour
         {
             Debug.DrawRay(contact.point, contact.normal, Color.white);
         }
-        if (collision.relativeVelocity.magnitude > triggerSoundMagnitude) {
+        if (collision.relativeVelocity.magnitude > triggerSoundMagnitude && collision.gameObject.layer == floorLayer) {
             audioSource.Play();
             string noteName = GetComponent<NoteInfo>().note.name;
             noteUIScript.TriggerNoteUpdate(noteName);
