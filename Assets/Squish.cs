@@ -5,47 +5,34 @@ using UnityEngine;
 public class Squish : MonoBehaviour
 {
     // Start is called before the first frame update
-
-    public float squishIncrement;
-    public float unSquishIncrement;
     public float maxSquishAmount;
-
     public float triggerSquishMagnitude;
-    float initialScale;
-
     float maxCollisionMagnitude;
     int floorLayer;
 
-    AudioSource audioSource;
+    // AudioSource audioSource;
 
-    public float pitchLow;
+    // public float pitchLow;
 
-    float pitch;
+    // float pitch;
+
+    //new
+    public float squishTime;
+    public float unSquishTime;
+    Vector3 initialScale;
+
     
-
-
-
-
-
     void Start()
     {
-      
-        initialScale = transform.localScale.x;
+        initialScale = transform.localScale;
         floorLayer = 6;
         maxCollisionMagnitude = 17;
-        audioSource = GetComponent<AudioSource>();
-
-
-
-
-
     }
 
     // Update is called once per frame
     void Update()
     {
-        audioSource.pitch = pitch;
-        
+        // audioSource.pitch = pitch;
     }
 
     void OnCollisionEnter(Collision collision)
@@ -55,9 +42,9 @@ public class Squish : MonoBehaviour
             Debug.DrawRay(contact.point, contact.normal, Color.white);
         }
         float collisionMagnitude = collision.relativeVelocity.magnitude;
-        float squishAmount = Mathf.Lerp (1, maxSquishAmount, Mathf.InverseLerp (0, maxCollisionMagnitude, collisionMagnitude));
-        
+
         if (collisionMagnitude > triggerSquishMagnitude && collision.gameObject.layer == floorLayer) {
+            float squishAmount = Mathf.Lerp (1, maxSquishAmount, Mathf.InverseLerp (0, maxCollisionMagnitude, collisionMagnitude));
             TriggerMakeSquish(squishAmount);
         }
     } 
@@ -65,63 +52,49 @@ public class Squish : MonoBehaviour
     public void TriggerMakeSquish(float squishAmount){
         StopAllCoroutines();
         StartCoroutine(MakeSquish(squishAmount));
-    }
-
-    public IEnumerator MakeSquish(float squishAmount){
-
-        float x = transform.localScale.x;
-        float z = transform.localScale.z;
-        float y = transform.localScale.y;
-
-        float squishDifference = (initialScale * squishAmount) - initialScale;
-
-        float squishX = initialScale + squishDifference;
-        float squishY = initialScale - (squishDifference * 2);
-
-
-    
-
-
-        while (transform.localScale.x < squishX && transform.localScale.y > squishY)
-        {
-            transform.localScale = new Vector3(x, y, z);
-            x += squishIncrement;
-            z += squishIncrement;
-            y -= squishIncrement;
-            pitch = Mathf.Lerp (pitchLow, 1, Mathf.InverseLerp (squishX, initialScale, x));
-
-            Debug.Log($"Decreasing pitch: {audioSource.pitch}");
-            yield return null;
-        }
-        StartCoroutine(MakeUnSquish(squishX));
 
     }
-        public IEnumerator MakeUnSquish(float squishX){
 
-
-        float x = transform.localScale.x;
-        float z = transform.localScale.z;
-        float y = transform.localScale.y;
-
-
-        while (transform.localScale.x > initialScale && transform.localScale.y < initialScale)
+ 
+        public  IEnumerator MakeSquish(float squishAmount)
         {
+            float elapsedTime = 0;
+            float squishDifference = (initialScale.x * squishAmount) - initialScale.x;
+            float squishX = initialScale.x + squishDifference;
+            float squishY = initialScale.x - (squishDifference * 2);
+            float squishZ = initialScale.x + squishDifference;
 
-            transform.localScale = new Vector3(x, y, z);
-            x -= unSquishIncrement;
-            z -= unSquishIncrement;
-            y += unSquishIncrement;
-            pitch = Mathf.Lerp (pitchLow, 1, Mathf.InverseLerp (squishX, initialScale, x));
+            Vector3 squishScale = new Vector3(squishX, squishY, squishZ);
 
-            Debug.Log($"Increasing pitch: {audioSource.pitch}");
-
-            yield return null;
+            while (elapsedTime < squishTime)
+            {
+                transform.localScale = Vector3.Lerp(initialScale, squishScale, (elapsedTime / squishTime));
+                elapsedTime += Time.deltaTime;
+                yield return new WaitForEndOfFrame();
+            }
+            StartCoroutine(MakeUnSquish());
 
         }
-        Debug.Log($"FINISHED pitch: {audioSource.pitch}");
 
+
+        public  IEnumerator MakeUnSquish()
+    {
+        float elapsedTime = 0;
+
+        Vector3 squishScale = transform.localScale;
+
+        while (elapsedTime < unSquishTime)
+        {
+            transform.localScale = Vector3.Lerp(squishScale, initialScale, (elapsedTime / unSquishTime));
+            elapsedTime += Time.deltaTime;
+            yield return new WaitForEndOfFrame();
+        }
 
     }
+
+    //         pitch = Mathf.Lerp (pitchLow, 1, Mathf.InverseLerp (squishX, initialScale, x));
+
+
 
 
 }

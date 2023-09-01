@@ -272,6 +272,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   squishIncrement: 0.15
   unSquishIncrement: 0.005
-  maxSquishAmount: 1.25
+  maxSquishAmount: 1.2
   triggerSquishMagnitude: 0.7
   pitchLow: 0
+  squishTime: 0.1
+  unSquishTime: 0.3
