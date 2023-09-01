@@ -274,3 +274,4 @@ MonoBehaviour:
   unSquishIncrement: 0.005
   maxSquishAmount: 1.25
   triggerSquishMagnitude: 0.7
+  pitchLow: 0

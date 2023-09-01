@@ -16,6 +16,13 @@ public class Squish : MonoBehaviour
     float maxCollisionMagnitude;
     int floorLayer;
 
+    AudioSource audioSource;
+
+    public float pitchLow;
+
+    float pitch;
+    
+
 
 
 
@@ -26,12 +33,18 @@ public class Squish : MonoBehaviour
         initialScale = transform.localScale.x;
         floorLayer = 6;
         maxCollisionMagnitude = 17;
-        
+        audioSource = GetComponent<AudioSource>();
+
+
+
+
+
     }
 
     // Update is called once per frame
     void Update()
     {
+        audioSource.pitch = pitch;
         
     }
 
@@ -42,7 +55,6 @@ public class Squish : MonoBehaviour
             Debug.DrawRay(contact.point, contact.normal, Color.white);
         }
         float collisionMagnitude = collision.relativeVelocity.magnitude;
-        Debug.Log($"collisionMagnitude: {collisionMagnitude}");
         float squishAmount = Mathf.Lerp (1, maxSquishAmount, Mathf.InverseLerp (0, maxCollisionMagnitude, collisionMagnitude));
         
         if (collisionMagnitude > triggerSquishMagnitude && collision.gameObject.layer == floorLayer) {
@@ -65,6 +77,8 @@ public class Squish : MonoBehaviour
 
         float squishX = initialScale + squishDifference;
         float squishY = initialScale - (squishDifference * 2);
+
+
     
 
 
@@ -74,17 +88,21 @@ public class Squish : MonoBehaviour
             x += squishIncrement;
             z += squishIncrement;
             y -= squishIncrement;
+            pitch = Mathf.Lerp (pitchLow, 1, Mathf.InverseLerp (squishX, initialScale, x));
+
+            Debug.Log($"Decreasing pitch: {audioSource.pitch}");
             yield return null;
         }
-        StartCoroutine(MakeUnSquish());
+        StartCoroutine(MakeUnSquish(squishX));
 
     }
-        public IEnumerator MakeUnSquish(){
+        public IEnumerator MakeUnSquish(float squishX){
 
 
         float x = transform.localScale.x;
         float z = transform.localScale.z;
         float y = transform.localScale.y;
+
 
         while (transform.localScale.x > initialScale && transform.localScale.y < initialScale)
         {
@@ -93,9 +111,15 @@ public class Squish : MonoBehaviour
             x -= unSquishIncrement;
             z -= unSquishIncrement;
             y += unSquishIncrement;
+            pitch = Mathf.Lerp (pitchLow, 1, Mathf.InverseLerp (squishX, initialScale, x));
+
+            Debug.Log($"Increasing pitch: {audioSource.pitch}");
+
             yield return null;
 
         }
+        Debug.Log($"FINISHED pitch: {audioSource.pitch}");
+
 
     }
 
